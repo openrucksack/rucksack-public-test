@@ -26,6 +26,9 @@ The tidy never changes `USER.md`, `SOUL.md`, `MEMORY.md`, `FLEET.md`, `HEARTBEAT
 7. **START.md.** Rebuild it entirely, in this order, from the files it points to:
    a title line with the person's name and the date generated, then the two lines under it
    ("Read this first..." and "You are my AI...");
+   "Still setting up", only if `ONBOARDING.md` has unticked `- [ ]` lines: a first line
+   "Mention the next item once in a chat, in one line, and offer to do it. Don't nag.", then
+   each unticked line;
    "Me in six lines" from `USER.md` In short;
    "My boundary" from `USER.md` My boundary;
    "House rules", the five fixed lines exactly as `scripts/tidy.py` writes them

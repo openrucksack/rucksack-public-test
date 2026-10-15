@@ -246,7 +246,10 @@ def start(activity_lines: list[str], pending: int) -> None:
     out = [f"# {name + chr(39) + 's rucksack' if name else 'This rucksack'}  (generated {TODAY.isoformat()})", "",
            "Read this first. It is generated from the files it points to; edit those, never this.",
            "You are my AI. There is no other character here; the skills are instructions you follow.", ""]
-    out += ["## Me in six lines"] + ([f"- {l.lstrip('- ')}" for l in section(user, "In short")[:6]] or ["- (not set up yet: follow skills/setup/SKILL.md)"]) + [""]
+    todo = [re.sub(r"^\s*- \[ \]\s*", "", l).strip() for l in clean(read(ROOT / "ONBOARDING.md")).splitlines() if re.match(r"^\s*- \[ \]", l)]
+    if todo:
+        out += ["## Still setting up (ONBOARDING.md)", "- Mention the next item once in a chat, in one line, and offer to do it. Don't nag."] + [f"- [ ] {t}" for t in todo[:8]] + [""]
+    out += ["## Me in six lines"] + ([f"- {l.lstrip('- ')}" for l in section(user, "In short")[:6]] or ["- (not set up yet: follow SETUP.md)"]) + [""]
     out += ["## My boundary (law for every agent)"] + ([f"- {l.lstrip('- ')}" for l in section(user, "My boundary")] or ["- (not set yet)"]) + [""]
     out += ["## House rules (the full set is in AGENTS.md)"] + HOUSE_RULES + [""]
     out += ["## How to be with me (SOUL.md)"] + (soul_lines or ["- (see SOUL.md)"]) + [""]

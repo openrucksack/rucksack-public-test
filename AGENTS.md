@@ -17,7 +17,10 @@ introduce yourself as anything other than the app you are.
 2. Read nothing else unless the task needs it. `USER.md`, `SOUL.md`, `MEMORY.md`,
    `FLEET.md`, `HEARTBEAT.md` and `LEARN.md` are the curated files; `memory/` holds the
    raw notes.
-3. If `USER.md` has no answers in it, this rucksack is new: follow `skills/setup/SKILL.md`.
+3. If `USER.md` has no answers in it, this rucksack is new: follow `SETUP.md`.
+4. If `ONBOARDING.md` has unticked items (START.md lists them under "Still setting up"),
+   mention the next one once in the chat, in one line, and offer to do it. Don't nag, and
+   don't interrupt their task to do it.
 
 ## Order of priority
 
@@ -86,8 +89,11 @@ request or merge; if your tool only writes on a branch, say so and stop.
   change under `## Proposes` in your note, one line each, `<file>: <the line as it would
   read>` and why. The teach skill applies proposals when the person says "apply my
   proposals"; the tidy applies any already marked `approved`. The exceptions, stated here
-  so nobody has to guess: the setup skill writes `USER.md`, `SOUL.md`, `FLEET.md` and
-  `LEARN.md` directly while setting up; the teach skill writes `LEARN.md` directly and the
+  so nobody has to guess: while setting up, `SETUP.md` writes `USER.md`, `FLEET.md`,
+  `LEARN.md`, `ONBOARDING.md`, `START.md` and `rucksack.yaml` directly (and the customise
+  and learning-profile steps write `USER.md`, `SOUL.md` and `LEARN.md`); any agent may tick
+  an item in `ONBOARDING.md` once it is done, and set a tool's Level and Checked date in
+  `FLEET.md` once it is connected; the teach skill writes `LEARN.md` directly and the
   wiring level and date in `FLEET.md`; any agent may create a new file under `projects/` or
   a new folder under `skills/`, and changes an existing skill only by proposal; anything
   goes in `try/`.

@@ -1,10 +1,19 @@
-# This rucksack  (generated 2026-10-14)
+# This rucksack  (generated 2026-10-15)
 
 Read this first. It is generated from the files it points to; edit those, never this.
 You are my AI. There is no other character here; the skills are instructions you follow.
 
+## Still setting up (ONBOARDING.md)
+- Mention the next item once in a chat, in one line, and offer to do it. Don't nag.
+- [ ] Rucksack created
+- [ ] Saved in your GitHub account
+- [ ] AI tools connected to your rucksack
+- [ ] Learn about your rucksack
+- [ ] Customise your rucksack
+- [ ] Set up your learning profile
+
 ## Me in six lines
-- (not set up yet: follow skills/setup/SKILL.md)
+- (not set up yet: follow SETUP.md)
 
 ## My boundary (law for every agent)
 - (not set yet)
