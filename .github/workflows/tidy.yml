@@ -1,0 +1,33 @@
+name: tidy
+# The nightly tidy. Rebuilds START.md, ACTIVITY.md and SKILLS.md, archives old notes,
+# applies approved proposals, runs the privacy check into CHECK.md. No model, no key,
+# no network beyond GitHub. Failures land in CHECK.md and the owner's email, never a
+# red tab the person has to understand.
+on:
+  schedule:
+    - cron: "0 17 * * *"   # 3am Brisbane (AEST is UTC+10)
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  tidy:
+    # Runs only in a person's own copy, never in the template or curriculum repos.
+    if: github.repository_owner != 'openrucksack'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Run the tidy
+        run: python3 -I -B scripts/tidy.py .
+      - name: Secrets scan (gitleaks, free on personal repos)
+        uses: gitleaks/gitleaks-action@v2
+        continue-on-error: true
+      - name: Commit what changed
+        run: |
+          git config user.name "rucksack tidy"
+          git config user.email "tidy@users.noreply.github.com"
+          git add -A
+          git diff --cached --quiet || git commit -m "tidy: $(date -u +%Y-%m-%d)"
+          git push

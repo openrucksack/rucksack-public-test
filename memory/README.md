@@ -1,0 +1,1 @@
+One file per note, written by any agent at the end of a chat worth remembering. Name: YYYY-MM-DD-HHMM-<app>.md. Headings: Did, Decided, Remember, Proposes, Flags. Never edit another note. Notes older than 30 days move to archive/ at the tidy.

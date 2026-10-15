@@ -1,0 +1,8 @@
+# Rucksack settings. Plain text; your AI changes these with you, by your yes.
+format: 0.3            # the rucksack layout version, from the curriculum
+write_policy: inbox    # inbox (default) | open | locked   - see AGENTS.md "Writing to the rucksack"
+tier: folder           # paste | folder | git   - how this rucksack is reached (README.md)
+timezone: Australia/Brisbane
+last_tidy: never
+pilot: true            # remove when the pilot ends
+pilot_contact: hello@openrucksack.com   # where feedback/ reports go during the pilot

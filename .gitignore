@@ -1,0 +1,8 @@
+# Local only. Nothing under vault/ goes to git; only this README travels with the template.
+vault/*
+!vault/README.md
+# .curriculum/ is a copy of the curriculum shipped with the template during the private beta; it is kept in git.
+# Working files some tools create
+.DS_Store
+# Python cache if a tool runs the tidy locally
+__pycache__/

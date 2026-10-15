@@ -1,0 +1,549 @@
+<!doctype html>
+<html lang="en-AU"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src data:">
+<title>Your rucksack</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=Unbounded:wght@600&display=swap" rel="stylesheet">
+<style>
+:root{--deep:#121B32;--navy:#313547;--rose:#A08077;--drose:#7C5F57;--pale:#EADFDB;--stone:#EFEDEC;--white:#fff;--ink:#1F2230;--ink2:#5A5E6E;--line:#E3DFDD;--ok:#3B7356;--warn:#9C4A2E;
+--sans:Manrope,"Avenir Next","Segoe UI",Helvetica,Arial,sans-serif;--mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;color-scheme:light}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:84px}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important;animation:none!important}}
+body{margin:0;background:var(--stone);color:var(--ink);font:500 16px/1.6 var(--sans);-webkit-font-smoothing:antialiased}
+.wrap{max-width:1216px;margin:0 auto;padding-inline:32px}
+@media (max-width:900px){.wrap{padding-inline:16px}}
+h1,h2,h3{text-wrap:balance;margin:0}
+h1{font-weight:800;font-size:64px;line-height:1;letter-spacing:-.035em;max-width:12ch}
+h2{font-weight:800;font-size:44px;line-height:1.05;letter-spacing:-.025em}
+h3{font-weight:700;font-size:20px;line-height:1.25;letter-spacing:-.01em}
+.lead{font-size:19px;line-height:1.55;color:var(--ink2);max-width:60ch;margin:12px 0 0}
+@media (max-width:900px){h1{font-size:42px}h2{font-size:32px}h3{font-size:18px}.lead{font-size:17px}}
+code,.mono{font-family:var(--mono);font-size:14px;color:var(--ink2)}
+button{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--navy);outline-offset:3px;border-radius:6px}
+.dark :focus-visible{outline-color:var(--pale)}
+
+/* bar */
+.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--white);border-bottom:1px solid var(--line);transition:box-shadow .15s ease-out}
+.bar.scrolled{box-shadow:0 6px 24px rgba(18,27,50,.08)}
+.bar .wrap{display:flex;align-items:center;gap:24px;height:68px}
+.lockup{display:flex;align-items:center;gap:9px;color:var(--navy);text-decoration:none;flex:none}
+.lockup svg{height:33px;width:auto}
+.wordmark{font:600 22px/1 Unbounded,var(--sans);letter-spacing:-.02em}.wordmark .r{margin-right:.06em}
+nav.tabs{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;flex:1;min-width:0}
+nav.tabs::-webkit-scrollbar{display:none}
+nav.tabs a{flex:none;padding:7px 14px;border-radius:999px;color:var(--ink2);text-decoration:none;font-weight:700;font-size:14px;transition:background-color .15s ease-out,color .15s ease-out}
+nav.tabs a:hover{background:var(--stone);color:var(--ink)}
+nav.tabs a.on{background:var(--navy);color:var(--white)}
+.updated{flex:none;font-size:13px;color:var(--ink2);font-weight:600}
+@media (max-width:900px){.updated{display:none}.lockup .wordmark{display:none}.bar .wrap{gap:12px}}
+
+/* panels */
+main{padding-block:24px 56px}
+section{margin-top:24px}
+.panel{border-radius:22px;position:relative;overflow:hidden}
+.dark{background:var(--deep);color:var(--white)}
+.dark .lead{color:var(--pale)}
+.open{padding:56px 0 8px}
+.open > .head{display:flex;justify-content:space-between;align-items:end;gap:24px;flex-wrap:wrap;margin-bottom:28px}
+.open > .head .lead{margin-top:10px}
+.label{font-size:13px;font-weight:700;color:var(--drose)}
+.dark .label{color:var(--pale)}
+
+/* hero */
+.hero{min-height:440px;display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);align-items:center}
+.hero canvas{position:absolute;inset:0;width:100%;height:100%}
+.hero .text{position:relative;padding:56px 0 56px 56px}
+.hero .pack{position:relative;justify-self:center;height:340px;width:auto;color:var(--white)}
+.hero .pack svg{height:100%;width:auto;display:block;filter:none}
+.hero .status{margin:22px 0 0;font-size:19px;line-height:1.5;max-width:44ch}
+.hero .status b{font-weight:800}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:22px}
+.chip{display:inline-flex;align-items:center;gap:7px;padding:6px 12px;border-radius:999px;font-size:13px;font-weight:700;background:var(--stone);color:var(--ink)}
+.dark .chip{background:rgba(234,223,219,.12);color:var(--pale)}
+.chip .dot{width:8px;height:8px;border-radius:50%;background:currentColor}
+@media (max-width:900px){.hero{grid-template-columns:1fr;min-height:0}.hero .text{padding:36px 20px 8px;order:2}.hero .pack{height:210px;margin-top:32px;order:1}.hero .status{font-size:17px}}
+.hero .text,.hero .pack{z-index:1}
+
+/* the pack diagram */
+.diagram{position:relative;display:grid;grid-template-columns:minmax(0,1fr) 300px minmax(0,1fr);gap:24px;align-items:center;min-height:560px}
+.leaders{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;overflow:visible}
+.leaders path{fill:none;stroke:var(--rose);stroke-width:1.2;stroke-dasharray:1 5;stroke-linecap:round;transition:opacity .15s ease-out}
+.leaders circle{fill:var(--rose)}
+.leaders .active{stroke:var(--navy);stroke-dasharray:none;stroke-width:1.6}
+.leaders circle.active{fill:var(--navy)}
+.diagram.has-active .leaders :not(.active){opacity:.25}
+.centre{display:flex;justify-content:center;color:var(--navy)}
+.centre svg{height:470px;width:auto}
+.side{list-style:none;margin:0;padding:0;display:grid;gap:6px}
+.side.left{justify-items:end}.side.right{justify-items:start}
+.item{display:flex;align-items:center;gap:12px;padding:8px 12px;border-radius:14px;border:1px solid transparent;background:none;cursor:pointer;text-align:left;transition:background-color .15s ease-out,border-color .15s ease-out,opacity .15s ease-out}
+.side.left .item{flex-direction:row-reverse;text-align:right}
+.item:hover,.item.active{background:var(--white);border-color:var(--line)}
+.diagram.has-active .item:not(.active){opacity:.55}
+.item .ic{width:40px;height:40px;flex:none;border-radius:12px;display:grid;place-items:center;background:var(--white);border:1px solid var(--line);color:var(--navy);position:relative}
+.item .ic svg{width:24px;height:24px}
+.item.empty .ic{color:var(--ink2);border-style:dashed;background:transparent}
+.item .ic .tk{position:absolute;right:-5px;top:-5px;width:17px;height:17px;color:var(--navy)}
+.item .nm{font-weight:700;font-size:15px;line-height:1.25;display:block}
+.item .st{font-size:13px;color:var(--ink2);display:block}
+.item .st code{font-size:12px}
+.detail{margin:8px auto 0;max-width:760px;background:var(--white);border:1px solid var(--line);border-radius:14px;padding:20px 22px;min-height:96px}
+.detail h3{display:flex;gap:10px;align-items:baseline;flex-wrap:wrap}
+.detail ul{margin:10px 0 0;padding-left:20px}.detail li{margin:3px 0}
+.detail p{margin:8px 0 0;color:var(--ink2)}
+.detail .hint{color:var(--ink2);margin:0}
+@media (max-width:900px){.diagram{grid-template-columns:1fr;min-height:0;gap:6px}.leaders{display:none}.centre{order:-1;margin-bottom:8px}.centre svg{height:220px}
+ .side{grid-template-columns:1fr 1fr;justify-items:stretch!important}.side.left .item{flex-direction:row;text-align:left}.item{padding:8px}}
+@media (max-width:420px){.side{grid-template-columns:1fr}}
+
+/* status: the apps and how each reaches the pack */
+.routes{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:14px}
+.app{background:var(--white);border:1px solid var(--line);border-radius:14px;padding:18px 18px 16px;min-width:0}
+.app .link{display:flex;align-items:center;gap:8px;margin-bottom:14px;color:var(--navy)}
+.app .link svg.mini{height:30px;width:auto;flex:none}
+.app .link .line{flex:1;height:0;border-top:2.4px solid var(--navy)}
+.app .link .line.connected{border-top-style:dashed}
+.app .link .line.cp{border-top:2.4px dotted var(--rose)}
+.app .link .line.none{border-top:2px dotted var(--line)}
+.app .link .end{width:34px;height:34px;border-radius:10px;border:1.5px solid var(--navy);display:grid;place-items:center;font-weight:800;font-size:14px;flex:none}
+.app .nm{font-weight:700;font-size:17px}
+.app .meta{font-size:14px;color:var(--ink2);margin-top:2px}
+.lv{display:inline-flex;align-items:center;gap:6px;margin-top:12px;padding:4px 11px;border-radius:999px;font-size:13px;font-weight:700;background:var(--stone)}
+.lv.wired{background:var(--navy);color:var(--white)}.lv.connected{background:var(--pale);color:var(--navy)}.lv.cp{background:var(--stone);color:var(--drose)}
+.lv.stale{color:var(--warn)}
+.legend{display:flex;flex-wrap:wrap;gap:18px;margin-top:16px;font-size:14px;color:var(--ink2)}
+.legend span{display:inline-flex;align-items:center;gap:8px}
+.legend i{display:inline-block;width:34px;border-top:2.4px solid var(--navy)}
+.legend i.connected{border-top-style:dashed}.legend i.cp{border-top:2.4px dotted var(--rose)}
+.packed{display:flex;flex-wrap:wrap;gap:8px;margin-top:22px}
+.packed .chip svg{width:16px;height:16px}
+.packed .chip.no{background:transparent;border:1px dashed var(--line);color:var(--ink2)}
+
+/* learning */
+.learning{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:24px;align-items:start}
+@media (max-width:900px){.learning{grid-template-columns:1fr}}
+.terrain{background:var(--white);border:1px solid var(--line);border-radius:14px;padding:22px 22px 18px}
+.ridge{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;align-items:end;height:250px;margin-top:6px}
+.col{display:flex;flex-direction:column-reverse;gap:5px;height:100%;cursor:pointer;background:none;border:0;padding:0;border-radius:10px}
+.col .step{height:calc((100% - 20px)/5);border-radius:7px;background:transparent;border:1.5px dashed var(--line);transition:border-color .15s ease-out,transform .15s ease-out}
+.col .step.start{background:var(--rose);border:0}
+.col .step.earned{background:var(--navy);border:0}
+.col:hover .step,.col.on .step{transform:translateY(-2px)}
+.col.on .step:not(.earned):not(.start){border-color:var(--rose)}
+.col.on{background:var(--stone)}
+.col{padding:4px}
+.names{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin-top:10px}
+.names button{background:none;border:0;padding:0;font-size:13px;font-weight:700;line-height:1.25;color:var(--ink2);cursor:pointer;text-align:left}
+.names button.on{color:var(--navy)}
+.area-detail{margin-top:18px;padding-top:16px;border-top:1px solid var(--line);min-height:92px}
+.area-detail p{margin:4px 0 0;color:var(--ink2)}
+.key{display:flex;gap:16px;font-size:13px;color:var(--ink2);margin-top:14px;flex-wrap:wrap}.key i{display:inline-block;width:14px;height:10px;border-radius:3px;margin-right:6px;vertical-align:middle}
+@media (max-width:600px){.ridge{height:180px;gap:6px}.names{gap:6px}.names button{font-size:11px}}
+.stack{display:grid;gap:14px}
+.card{background:var(--white);border:1px solid var(--line);border-radius:14px;padding:18px 20px}
+.card .label{display:block;margin-bottom:6px}
+.quote{font-size:17px;line-height:1.5;margin:0}
+.quote li{margin:4px 0}
+.now{background:var(--navy);color:var(--white);border:0}
+.now .label{color:var(--pale)}
+.now .big{font-size:20px;font-weight:700;line-height:1.35;margin:0}
+.copy{display:inline-flex;align-items:center;gap:8px;margin-top:14px;padding:9px 16px;border-radius:999px;border:1px solid var(--line);background:var(--white);color:var(--navy);font-weight:700;font-size:14px;cursor:pointer;transition:background-color .15s ease-out,color .15s ease-out}
+.copy:hover{background:var(--stone)}
+.now .copy{background:var(--pale);border-color:var(--pale);color:var(--navy)}
+.now .copy:hover{background:var(--white)}
+.copy svg{width:16px;height:16px}
+.copy.done{background:var(--ok)!important;border-color:var(--ok)!important;color:var(--white)!important}
+.nexts{display:grid;gap:10px;margin:0;padding:0;list-style:none}
+.nexts li{display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap}
+.nexts .copy{margin-top:0;padding:7px 13px}
+
+/* skills: gear on a strap */
+.belt{position:relative;padding:26px 0 6px}
+.belt:before{content:"";position:absolute;left:0;right:0;top:58px;height:14px;border-radius:7px;background:repeating-linear-gradient(90deg,var(--navy) 0 10px,#3B4053 10px 12px);opacity:.9}
+.gear{position:relative;display:flex;gap:14px;overflow-x:auto;padding:0 2px 14px;scroll-snap-type:x mandatory}
+.tool{scroll-snap-align:start;flex:none;width:230px;background:var(--white);border:1px solid var(--line);border-radius:14px;padding:16px;margin-top:50px;position:relative}
+.tool:before{content:"";position:absolute;top:-30px;left:24px;width:14px;height:34px;border-radius:0 0 6px 6px;border:2.4px solid var(--navy);border-top:0;background:var(--stone)}
+.tool .nm{font-weight:700;display:flex;align-items:center;gap:8px}.tool .nm svg{width:20px;height:20px;color:var(--navy)}
+.tool p{margin:6px 0 0;font-size:14px;color:var(--ink2);line-height:1.5}
+.tool.ours{background:transparent;border-style:dashed}
+.tool.add{border-style:dashed;background:transparent;display:flex;flex-direction:column;justify-content:center}
+.routines{margin-top:18px;font-size:15px;color:var(--ink2)}
+
+/* notes: the trail */
+.trail{list-style:none;margin:0;padding:0 0 0 4px;position:relative}
+.trail:before{content:"";position:absolute;left:11px;top:10px;bottom:10px;border-left:2px dotted var(--rose)}
+.trail li{position:relative;padding:0 0 18px 40px}
+.trail li:before{content:"";position:absolute;left:4px;top:7px;width:14px;height:14px;border-radius:50%;background:var(--stone);border:2.4px solid var(--navy)}
+.trail li.flag:before{border-color:var(--warn)}
+.trail .when{font-size:13px;font-weight:700;color:var(--ink2)}
+.trail .app-tag{display:inline-block;margin-left:8px;padding:1px 9px;border-radius:999px;background:var(--white);border:1px solid var(--line);font-size:12px;font-weight:700;color:var(--navy)}
+.trail .did{margin:2px 0 0;font-size:16px}
+.counts{display:flex;gap:10px;flex-wrap:wrap;margin-top:6px}
+.notes-grid{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr);gap:24px}
+@media (max-width:900px){.notes-grid{grid-template-columns:1fr}}
+
+/* try things: the rose band */
+.band{background:var(--drose);color:var(--white);padding:48px 56px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:32px;align-items:center}
+.band .lead{color:var(--white);opacity:.92}
+.band canvas{position:absolute;right:0;top:0;height:100%;width:50%;opacity:.5;pointer-events:none}
+.band > *{position:relative}
+.sandbox{background:rgba(255,255,255,.1);border:1px dashed rgba(255,255,255,.45);border-radius:14px;padding:18px 20px;min-height:140px}
+.sandbox ul{margin:0;padding-left:18px}.sandbox code{color:var(--white);font-size:14px}
+.band .copy{background:var(--white);border-color:var(--white)}
+@media (max-width:900px){.band{grid-template-columns:1fr;padding:32px 20px}}
+
+/* health check */
+.health{padding:48px 56px}
+.health h2{color:var(--white)}
+.checks{list-style:none;margin:28px 0 0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
+.checks li{display:flex;gap:14px;align-items:flex-start;padding:16px;border-radius:14px;background:rgba(234,223,219,.07);border:1px solid rgba(234,223,219,.14)}
+.checks svg{width:28px;height:28px;flex:none;color:var(--pale)}
+.checks li.warn svg{color:#E7A58F}
+.checks b{display:block;font-size:16px}
+.checks span{display:block;font-size:14px;color:var(--pale);opacity:.85;margin-top:2px}
+.checks ul{margin:6px 0 0;padding-left:16px;font-size:13px;color:var(--pale)}
+@media (max-width:900px){.health{padding:32px 20px}}
+
+footer{margin-top:40px;color:var(--ink2);font-size:14px;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translate(-50%,20px);opacity:0;background:var(--navy);color:var(--white);padding:10px 16px;border-radius:999px;font-weight:700;font-size:14px;transition:opacity .15s ease-out,transform .15s ease-out;pointer-events:none;z-index:30}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+</style>
+<!--CUSTOM_CSS-->
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><symbol id="pack" viewBox="301.37 226.74 420.37 596.50"><path fill="currentColor" d="M336.3 286.63 450.86 291.39Q451.59 280.36 455.31 270.02Q459.95 257.14 468.51 247.27Q477.07 237.41 488.26 232.08Q499.44 226.74 511.55 226.74Q523.66 226.74 534.84 232.08Q546.03 237.41 554.59 247.27Q563.15 257.14 567.79 270.02Q571.51 280.36 572.24 291.39L686.8 286.63Q686.95 286.63 687.1 286.63V286.58Q693.83 286.58 700.05 290.13Q706.26 293.67 711.02 300.21Q715.78 306.75 718.35 315.29Q720.92 323.84 720.91 333.08Q720.91 337 720.45 340.79Q719.89 345.69 718.56 350.37Q716.25 358.5 711.99 364.73Q710.28 367.22 708.36 369.26Q704.59 373.45 700.05 376.04Q693.83 379.59 687.1 379.59V379.54Q687.03 379.54 686.96 379.54L675.21 379.3Q675.7 391.09 679.22 403.59Q682.03 413.57 689.92 432.64Q698.64 453.73 702.03 467.08H702.54Q705.85 467.08 708.91 468.35Q711.97 469.61 714.31 471.96Q716.66 474.3 717.92 477.36Q719.19 480.42 719.19 483.73V511.39Q719.19 514.7 717.92 517.76Q716.66 520.82 714.31 523.16Q711.97 525.51 708.91 526.77Q705.85 528.04 702.54 528.04H698.81L721.32 604.34Q721.99 606.62 721.57 608.96Q721.15 611.3 719.73 613.2Q718.3 615.1 716.18 616.17Q714.06 617.23 711.68 617.23H700.02L714.43 734.34Q719.43 774.92 693.87 799.85Q669.88 823.24 629.36 823.24H393.74Q353.22 823.24 329.23 799.85Q303.67 774.92 308.67 734.34L323.08 617.23H311.42Q309.04 617.23 306.92 616.17Q304.8 615.1 303.37 613.2Q301.95 611.3 301.53 608.96Q301.11 606.62 301.78 604.34L324.29 528.04H320.56Q317.25 528.04 314.19 526.77Q311.13 525.51 308.79 523.16Q306.44 520.82 305.18 517.76Q303.91 514.7 303.91 511.39V483.73Q303.91 480.42 305.18 477.36Q306.44 474.3 308.79 471.96Q311.13 469.61 314.19 468.35Q317.25 467.08 320.56 467.08H321.07Q324.46 453.73 333.18 432.64Q341.07 413.57 343.88 403.59Q347.4 391.09 347.89 379.3L336.14 379.54Q336.07 379.54 336 379.54V379.59Q329.27 379.59 323.05 376.04Q318.51 373.45 314.74 369.26Q312.82 367.22 311.11 364.73Q306.85 358.5 304.54 350.37Q303.21 345.69 302.65 340.79Q302.19 337 302.19 333.08Q302.18 323.84 304.75 315.29Q307.32 306.75 312.08 300.21Q316.84 293.67 323.05 290.13Q329.27 286.58 336 286.58V286.63Q336.15 286.63 336.3 286.63ZM338.9 611.47 338.2 617.18V617.23H338.19L323.55 736.18Q319.47 769.38 339.7 789.11Q359.32 808.24 393.74 808.24H629.36Q663.78 808.24 683.4 789.11Q703.63 769.38 699.55 736.18L684.91 617.23H684.9V617.18L684.2 611.47Q683.91 609.17 684.9 607.23V530.58Q683.49 528.46 683.73 525.83L683.83 524.73Q682.87 524.02 682.02 523.16Q679.67 520.82 678.41 517.76Q677.14 514.7 677.14 511.39V483.73Q677.14 480.42 678.41 477.36Q679.67 474.3 682.02 471.96Q684.16 469.81 686.91 468.57Q683.68 456.81 676.06 438.37Q667.83 418.49 664.78 407.65Q660.65 392.98 660.19 379L536.6 376.5V399.31Q539.48 400.32 541.82 402.66Q545.95 406.79 545.95 412.63V433.22Q545.95 439.06 541.82 443.19Q539.48 445.53 536.6 446.54V488.4Q536.59 493.38 534.68 497.98Q532.77 502.57 529.25 506.09Q525.73 509.61 521.13 511.51Q516.53 513.42 511.55 513.42Q506.57 513.42 501.97 511.51Q497.37 509.61 493.85 506.09Q490.33 502.57 488.42 497.98Q486.51 493.38 486.5 488.4V446.54Q483.62 445.53 481.28 443.19Q477.15 439.06 477.15 433.22V412.63Q477.15 406.79 481.28 402.66Q483.62 400.32 486.5 399.31V376.5L362.91 379Q362.45 392.98 358.32 407.65Q355.27 418.49 347.04 438.37Q339.42 456.81 336.19 468.57Q338.94 469.81 341.08 471.96Q343.43 474.3 344.69 477.36Q345.96 480.42 345.96 483.73V511.39Q345.96 514.7 344.69 517.76Q343.43 520.82 341.08 523.16Q340.23 524.02 339.27 524.73L339.37 525.83Q339.61 528.46 338.2 530.58V607.23Q339.19 609.17 338.9 611.47ZM414.49 562.86H608.61Q616.23 562.85 623.28 565.77Q630.32 568.69 635.71 574.08Q641.1 579.47 644.02 586.51Q646.93 593.56 646.93 601.18V604.05Q646.98 604.46 646.98 604.9Q646.98 605.34 646.93 605.75V715.88Q646.93 724.42 643.67 732.31Q640.4 740.2 634.36 746.23Q628.33 752.27 620.44 755.54Q612.55 758.8 604.01 758.8H419.09Q410.55 758.8 402.66 755.54Q394.77 752.27 388.74 746.23Q382.7 740.2 379.43 732.31Q376.16 724.42 376.17 715.88V605.75Q376.11 605.34 376.11 604.9Q376.11 604.46 376.17 604.05V601.18Q376.17 593.56 379.08 586.51Q382 579.47 387.39 574.08Q392.78 568.69 399.82 565.77Q406.87 562.86 414.49 562.86ZM389.01 611.38V715.88Q389.01 721.86 391.3 727.39Q393.59 732.92 397.82 737.15Q402.05 741.38 407.58 743.67Q413.11 745.95 419.09 745.96H604.01Q609.99 745.95 615.52 743.67Q621.05 741.38 625.28 737.15Q629.51 732.92 631.8 727.39Q634.09 721.86 634.09 715.88V611.38H416.82V618.39Q418.79 619.36 420.46 621.04Q424.41 624.98 424.41 630.56V651.14Q424.41 656.72 420.46 660.66Q416.52 664.61 410.94 664.61Q405.36 664.61 401.42 660.66Q397.47 656.72 397.47 651.14V630.56Q397.47 624.98 401.42 621.04Q403.09 619.36 405.07 618.39V611.38ZM486.5 362.17V312L487.16 307.58L353.93 302.05Q353.96 302.09 353.99 302.13Q358.25 308.36 360.56 316.49Q362.87 324.63 362.87 333.43Q362.87 342.23 360.56 350.37Q358.28 358.41 354.08 364.59Q354.59 364.5 355.12 364.49Q356.41 364.44 357.56 364.77ZM535.94 307.58 536.6 312V362.17L665.54 364.77Q666.69 364.44 667.98 364.49Q668.51 364.5 669.02 364.59Q664.82 358.41 662.54 350.37Q660.23 342.23 660.23 333.43Q660.23 324.63 662.54 316.49Q664.85 308.36 669.11 302.13L669.17 302.05ZM414.49 575.71Q409.42 575.71 404.74 577.64Q400.06 579.58 396.48 583.17Q392.89 586.75 390.95 591.43Q389.55 594.83 389.16 598.43H633.94Q633.55 594.83 632.15 591.43Q630.21 586.75 626.62 583.17Q623.04 579.58 618.36 577.64Q613.68 575.7 608.61 575.71ZM468.65 292.13 490.39 293.03Q491.35 291.5 492.7 290.14Q497.29 285.56 503.77 285.56H519.33Q525.81 285.56 530.4 290.14Q531.75 291.5 532.71 293.03L554.45 292.13Q553.76 284.73 551.46 277.73Q548.18 267.74 542.1 260.08Q536.03 252.43 528.09 248.29Q520.15 244.15 511.55 244.15Q502.95 244.15 495.01 248.29Q487.07 252.43 481 260.08Q474.92 267.74 471.64 277.73Q469.34 284.73 468.65 292.13ZM522.04 398.53V304.73Q522.04 302.44 520.42 300.82Q518.8 299.2 516.51 299.2H506.59Q504.3 299.2 502.68 300.82Q501.06 302.44 501.06 304.73V398.53ZM705.02 333.64Q705.02 327.68 703.9 322.17Q702.77 316.66 700.7 312.44Q698.62 308.22 695.91 305.94Q693.2 303.66 690.26 303.66Q687.32 303.66 684.61 305.94Q681.9 308.22 679.82 312.44Q677.75 316.66 676.62 322.17Q675.5 327.68 675.5 333.64Q675.5 339.6 676.62 345.11Q677.75 350.62 679.82 354.84Q681.9 359.06 684.61 361.34Q687.32 363.62 690.26 363.62Q693.2 363.62 695.91 361.34Q698.62 359.06 700.7 354.84Q702.77 350.62 703.9 345.11Q705.02 339.6 705.02 333.64ZM318.08 333.64Q318.08 339.6 319.2 345.11Q320.33 350.62 322.4 354.84Q324.48 359.06 327.19 361.34Q329.9 363.62 332.84 363.62Q335.78 363.62 338.49 361.34Q341.2 359.06 343.28 354.84Q345.35 350.62 346.48 345.11Q347.6 339.6 347.6 333.64Q347.6 327.68 346.48 322.17Q345.35 316.66 343.28 312.44Q341.2 308.22 338.49 305.94Q335.78 303.66 332.84 303.66Q329.9 303.66 327.19 305.94Q324.48 308.22 322.4 312.44Q320.33 316.66 319.2 322.17Q318.08 327.68 318.08 333.64ZM501.06 488.5Q501.06 492.85 504.13 495.92Q507.2 498.99 511.55 498.99Q515.9 498.99 518.97 495.92Q522.04 492.85 522.04 488.5V447.32H501.06ZM495.84 411.95Q493.97 411.95 492.64 413.27Q491.32 414.6 491.32 416.47V428.78Q491.32 430.65 492.64 431.98Q493.97 433.3 495.84 433.3H527.26Q529.13 433.3 530.46 431.98Q531.78 430.65 531.78 428.78V416.47Q531.78 414.6 530.46 413.27Q529.13 411.95 527.26 411.95ZM699.35 480.68H696.98Q695 480.68 693.6 482.08Q692.2 483.48 692.2 485.46V509.66Q692.2 511.64 693.6 513.04Q695 514.44 696.98 514.44H699.35Q699.58 514.44 699.81 514.42Q701.5 514.27 702.73 513.04Q704.13 511.64 704.13 509.66V485.46Q704.13 483.48 702.73 482.08L702.71 482.06Q701.31 480.68 699.35 480.68ZM323.75 480.68Q321.79 480.68 320.39 482.06L320.37 482.08Q318.97 483.48 318.97 485.46V509.66Q318.97 511.64 320.37 513.04Q321.6 514.27 323.29 514.42Q323.52 514.44 323.75 514.44H326.12Q328.1 514.44 329.5 513.04Q330.9 511.64 330.9 509.66V485.46Q330.9 483.48 329.5 482.08Q328.1 480.68 326.12 480.68ZM325.6 571.08 315.92 603.88H325.6ZM697.5 571.08V603.88H707.18ZM410.94 627.59Q409.88 627.59 409.2 627.97Q408.93 628.12 408.71 628.33Q407.97 629.07 407.97 630.56V651.14Q407.97 654.11 410.94 654.11Q413.91 654.11 413.91 651.14V630.56Q413.91 629.07 413.17 628.33Q412.95 628.12 412.68 627.97Q412 627.59 410.94 627.59Z"/></symbol><symbol id="pack-small" viewBox="301.34 226.74 420.42 603.00"><path fill="currentColor" d="M336.57 286.64 450.86 291.38Q451.6 280.36 455.31 270.02Q459.95 257.14 468.51 247.27Q477.07 237.41 488.26 232.08Q499.44 226.74 511.55 226.74Q523.66 226.74 534.84 232.08Q546.03 237.41 554.59 247.27Q563.15 257.14 567.79 270.02Q571.5 280.36 572.24 291.38L686.53 286.64Q686.81 286.63 687.1 286.63V286.58Q693.83 286.58 700.05 290.13Q706.26 293.67 711.02 300.21Q715.78 306.75 718.35 315.29Q720.92 323.84 720.91 333.08Q720.91 337 720.45 340.79Q719.89 345.69 718.56 350.37Q716.25 358.5 711.99 364.73Q710.28 367.22 708.36 369.26Q704.59 373.45 700.05 376.04Q693.83 379.59 687.1 379.59V379.54Q686.96 379.54 686.82 379.54L681.72 379.44Q682.22 390.28 685.47 401.82Q688.18 411.44 695.92 430.16Q706.83 456.52 709.65 471.39Q710.02 473.31 709.84 475.25L705.2 527.09L705.64 609.65L720.89 733.55Q726.27 777.33 698.41 804.5Q672.53 829.74 629.36 829.74H393.74Q350.57 829.74 324.69 804.5Q296.83 777.33 302.21 733.55L317.46 609.66L317.9 527.09L313.26 475.25Q313.08 473.31 313.45 471.39Q316.27 456.52 327.18 430.16Q334.92 411.44 337.63 401.82Q340.88 390.28 341.38 379.44L336.28 379.54Q336.14 379.54 336 379.54V379.59Q329.27 379.59 323.05 376.04Q318.51 373.45 314.74 369.26Q312.82 367.22 311.11 364.73Q306.85 358.5 304.54 350.37Q303.21 345.69 302.65 340.79Q302.19 337 302.19 333.08Q302.18 323.84 304.75 315.29Q307.32 306.75 312.08 300.21Q316.84 293.67 323.05 290.13Q329.27 286.58 336 286.58V286.63Q336.29 286.63 336.57 286.64ZM677.67 611.44Q677.61 610.65 677.64 609.89L677.2 526.57Q677.2 525.91 677.26 525.25L681.77 474.8Q679.14 462.84 670.05 440.86Q661.68 420.62 658.52 409.42Q654.12 393.8 653.68 378.87L536.6 376.5V399.31Q539.48 400.32 541.82 402.66Q545.95 406.79 545.95 412.63V433.22Q545.95 439.06 541.82 443.19Q539.48 445.53 536.6 446.54V488.4Q536.59 493.38 534.68 497.98Q532.77 502.57 529.25 506.09Q525.73 509.61 521.13 511.51Q516.53 513.42 511.55 513.42Q506.57 513.42 501.97 511.51Q497.37 509.61 493.85 506.09Q490.33 502.57 488.42 497.98Q486.51 493.38 486.5 488.4V446.54Q483.62 445.53 481.28 443.19Q477.15 439.06 477.15 433.22V412.63Q477.15 406.79 481.28 402.66Q483.62 400.32 486.5 399.31V376.5L369.42 378.87Q368.98 393.8 364.58 409.42Q361.42 420.62 353.05 440.86Q343.96 462.84 341.33 474.8L345.84 525.25Q345.9 525.91 345.9 526.57L345.46 609.88Q345.49 610.65 345.43 611.44Q345.39 612.24 345.26 612.99L330.01 736.97Q326.31 766.97 344.24 784.46Q361.96 801.74 393.74 801.74H629.36Q661.14 801.74 678.86 784.46Q696.79 766.97 693.09 736.97L677.84 612.99Q677.71 612.23 677.67 611.44ZM414.49 556.36H608.61Q617.53 556.35 625.76 559.77Q634 563.18 640.31 569.48Q646.61 575.79 650.02 584.03Q653.43 592.26 653.43 601.18V715.88Q653.43 725.71 649.67 734.79Q645.91 743.88 638.96 750.83Q632.01 757.78 622.92 761.54Q613.84 765.3 604.01 765.3H419.09Q409.26 765.3 400.18 761.54Q391.09 757.78 384.14 750.83Q377.19 743.88 373.43 734.79Q369.66 725.71 369.67 715.88V601.18Q369.67 592.26 373.08 584.03Q376.49 575.79 382.79 569.48Q389.1 563.18 397.34 559.77Q405.57 556.36 414.49 556.36ZM414.49 582.21Q410.72 582.21 407.23 583.65Q403.74 585.09 401.07 587.76Q398.4 590.43 396.96 593.92Q395.52 597.41 395.51 601.18V715.88Q395.51 720.57 397.31 724.9Q399.1 729.23 402.42 732.55Q405.74 735.87 410.07 737.66Q414.4 739.45 419.09 739.46H604.01Q608.7 739.45 613.03 737.66Q617.36 735.87 620.68 732.55Q624 729.23 625.79 724.9Q627.59 720.57 627.59 715.88V601.18Q627.59 597.41 626.14 593.92Q624.7 590.43 622.03 587.76Q619.36 585.09 615.87 583.65Q612.38 582.2 608.61 582.21ZM536.6 320.55V349.17L662.94 351.72Q662.73 351.05 662.54 350.37Q660.23 342.23 660.23 333.43Q660.23 324.63 662.54 316.49Q662.71 315.9 662.89 315.31ZM486.5 349.17V320.55L360.21 315.31Q360.39 315.9 360.56 316.49Q362.87 324.63 362.87 333.43Q362.87 342.23 360.56 350.37Q360.37 351.05 360.16 351.72ZM475.16 292.39 490.39 293.02Q491.35 291.5 492.7 290.14Q497.29 285.56 503.77 285.56H519.33Q525.81 285.56 530.4 290.14Q531.75 291.5 532.71 293.02L547.94 292.39Q547.32 286.15 545.45 280.24Q542.65 271.45 537.49 264.71Q532.33 257.98 525.59 254.34Q518.85 250.7 511.55 250.7Q504.25 250.7 497.51 254.34Q490.77 257.98 485.61 264.71Q480.45 271.45 477.65 280.24Q475.78 286.15 475.16 292.39ZM515.54 398.53V311.23H517.51Q517.51 310.23 516.51 310.23H506.59Q505.59 310.23 505.59 311.23H507.56V398.53ZM335.72 352.21 337.91 352.17Q338.32 351.28 338.68 350.24Q339.84 346.94 340.47 342.63Q341.1 338.31 341.1 333.64Q341.1 328.97 340.47 324.65Q339.84 320.34 338.68 317.04Q338.16 315.55 337.56 314.37L335.43 314.29Q331.98 314.14 329.2 312.56Q327.98 314.26 327 317.04Q325.84 320.34 325.21 324.65Q324.58 328.97 324.58 333.64Q324.58 338.31 325.21 342.63Q325.84 346.94 327 350.24Q327.83 352.61 328.85 354.2Q331.88 352.29 335.72 352.21ZM698.52 333.64Q698.52 328.97 697.89 324.65Q697.26 320.34 696.1 317.04Q695.12 314.26 693.9 312.56Q691.12 314.14 687.67 314.29L685.54 314.37Q684.94 315.55 684.42 317.04Q683.26 320.34 682.63 324.65Q682 328.97 682 333.64Q682 338.31 682.63 342.63Q683.26 346.94 684.42 350.24Q684.78 351.28 685.19 352.17L687.38 352.21Q691.22 352.29 694.25 354.2Q695.27 352.61 696.1 350.24Q697.26 346.94 697.89 342.63Q698.52 338.31 698.52 333.64ZM699.35 480.68H696.98Q695 480.68 693.6 482.08Q692.2 483.48 692.2 485.46V509.66Q692.2 511.64 693.6 513.04Q695 514.44 696.98 514.44H699.35Q701.33 514.44 702.73 513.04Q704.13 511.64 704.13 509.66V485.46Q704.13 483.48 702.73 482.08Q701.33 480.68 699.35 480.68ZM323.75 480.68Q321.77 480.68 320.37 482.08Q318.97 483.48 318.97 485.46V509.66Q318.97 511.64 320.37 513.04Q321.77 514.44 323.75 514.44H326.12Q328.1 514.44 329.5 513.04Q330.9 511.64 330.9 509.66V485.46Q330.9 483.48 329.5 482.08Q328.1 480.68 326.12 480.68ZM507.56 488.5Q507.57 492.48 511.55 492.48Q515.53 492.48 515.54 488.5V447.32H507.56ZM498.82 418.45Q497.82 418.45 497.82 419.45V425.8Q497.82 426.8 498.82 426.8H524.28Q525.28 426.8 525.28 425.8V419.45Q525.28 418.45 524.28 418.45Z"/></symbol></defs></svg>
+
+<header class="bar" id="bar"><div class="wrap">
+  <a class="lockup" href="#top" aria-label="Rucksack, back to the top"><svg viewBox="0 0 420.42 603.00" aria-hidden="true"><use href="#pack-small" width="420.42" height="603.00"/></svg><span class="wordmark"><span class="r">r</span>ucksack</span></a>
+  <nav class="tabs" aria-label="Sections">
+    <a href="#status">Status</a><a href="#learning">Learning</a><a href="#skills">Skills and tools</a><a href="#notes">Notes</a><a href="#try">Try things</a><a href="#health">Health check</a>
+  </nav>
+  <span class="updated" id="updated"></span>
+</div></header>
+
+<main class="wrap" id="top">
+  <section class="panel dark hero" aria-labelledby="t-hero">
+    <canvas id="terrain" aria-hidden="true"></canvas>
+    <div class="text">
+      <span class="label">Your rucksack</span>
+      <h1 id="t-hero"></h1>
+      <p class="status" id="hero-status"></p>
+      <div class="chips" id="hero-chips"></div>
+    </div>
+    <div class="pack" id="hero-pack" aria-hidden="true"><svg viewBox="0 0 420.37 596.50"><use href="#pack" width="420.37" height="596.50"/></svg></div>
+  </section>
+
+  <section class="open" id="pack-sec" aria-labelledby="t-pack">
+    <div class="head"><div><h2 id="t-pack">What's in your pack</h2><p class="lead">Every AI you connect reads these. Open any part to see what it holds.</p></div></div>
+    <div class="diagram" id="diagram">
+      <svg class="leaders" aria-hidden="true"></svg>
+      <ul class="side left" id="side-left"></ul>
+      <div class="centre" aria-hidden="true"><svg viewBox="0 0 420.37 596.50"><use href="#pack" width="420.37" height="596.50"/></svg></div>
+      <ul class="side right" id="side-right"></ul>
+    </div>
+    <div class="detail" id="detail" aria-live="polite"></div>
+  </section>
+
+  <section class="open" id="status" aria-labelledby="t-status">
+    <div class="head"><div><h2 id="t-status">Status</h2><p class="lead" id="status-lead"></p></div></div>
+    <div class="routes" id="routes"></div>
+    <div class="legend"><span><i></i>Wired: reads it in every chat, writes back</span><span><i class="connected"></i>Connected: reads it when asked</span><span><i class="cp"></i>A copy: pasted in, goes stale</span></div>
+    <div class="packed" id="packed"></div>
+  </section>
+
+  <section class="open" id="learning" aria-labelledby="t-learning">
+    <div class="head"><div><h2 id="t-learning">Learning</h2><p class="lead">Six areas, five levels each. Levels move only when you do something and see it work.</p></div></div>
+    <div class="learning">
+      <div class="terrain">
+        <div class="ridge" id="ridge" role="group" aria-label="Your six areas"></div>
+        <div class="names" id="names"></div>
+        <div class="key"><span><i style="background:var(--rose)"></i>where you started</span><span><i style="background:var(--navy)"></i>earned by doing</span><span><i style="border:1.5px dashed var(--rose);width:12px;height:8px"></i>still ahead</span></div>
+        <div class="area-detail" id="area-detail" aria-live="polite"></div>
+      </div>
+      <div class="stack">
+        <div class="card now"><span class="label">Working on now</span><p class="big" id="now"></p><span id="now-copy"></span></div>
+        <div class="card"><span class="label">Next</span><ul class="nexts" id="next"></ul></div>
+        <div class="card"><span class="label">How you like to learn</span><ul class="quote" id="learn-how"></ul></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="open" id="skills" aria-labelledby="t-skills">
+    <div class="head"><div><h2 id="t-skills">Skills and tools</h2><p class="lead">Things you have taught your AI to do. Every app that reads your rucksack can use them.</p></div></div>
+    <div class="belt"><div class="gear" id="gear"></div></div>
+    <p class="routines" id="routines"></p>
+  </section>
+
+  <section class="open" id="notes" aria-labelledby="t-notes">
+    <div class="head"><div><h2 id="t-notes">Notes</h2><p class="lead">What your AIs left behind after chats worth remembering.</p></div></div>
+    <div class="notes-grid">
+      <ol class="trail" id="trail"></ol>
+      <div class="stack">
+        <div class="card"><span class="label">Kept for good</span><p class="quote" id="kept"></p></div>
+        <div class="card"><span class="label">Monthly look-back</span><p class="quote" id="lookback"></p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel band" id="try" aria-labelledby="t-try">
+    <canvas id="weave" aria-hidden="true"></canvas>
+    <div><span class="label" style="color:var(--pale)">Try things</span><h2 id="t-try">A place to try things</h2>
+      <p class="lead">Any AI may write in <code style="color:var(--white)">try/</code> freely. Nothing there is about you, and nothing there is read as instructions.</p>
+      <span id="try-copy"></span></div>
+    <div class="sandbox" id="sandbox"></div>
+  </section>
+
+  <section class="panel dark health" id="health" aria-labelledby="t-health">
+    <span class="label">Health check</span><h2 id="t-health">How your rucksack is doing</h2>
+    <ul class="checks" id="checks"></ul>
+  </section>
+
+  <footer><span id="foot-curriculum"></span><span id="foot-css"></span></footer>
+</main>
+<div class="toast" id="toast" role="status"></div>
+
+<script id="rucksack-data" type="application/json">{"today": "2026-10-14", "name": "", "set_up": false, "in_short": [], "parts": [{"icon": "user", "label": "About you", "file": "USER.md", "packed": false, "lines": [], "what": "Who you are and what you want help with. Every AI reads these lines first.", "empty_hint": "Empty until you set up.", "status": "empty"}, {"icon": "boundary", "label": "Your boundary", "file": "USER.md", "packed": false, "lines": [], "what": "What never goes in, and what any AI must ask you about first. Law for every app.", "empty_hint": "Not set yet. Setting up asks this before anything else.", "status": "empty"}, {"icon": "soul", "label": "How your AI works with you", "file": "SOUL.md", "packed": true, "lines": ["Speak plainly. Australian English. Explain any AI or technical term in plain words the first time", "Be direct. Say what you found and what you recommend. Do not pad, flatter or hedge", "Say what you did not do. A skipped check or an unverified claim is said out loud", "Ask before you act on anything that leaves this rucksack or costs money", "When I am checking something, show me the evidence; do not tell me it is fine"], "what": "How you want any AI to be with you. Add a line whenever you notice what you like.", "status": "packed"}, {"icon": "fleet", "label": "Your apps", "file": "FLEET.md", "packed": false, "lines": [], "what": "The AI apps you use and how each one reaches your rucksack.", "status": "empty"}, {"icon": "learn", "label": "Learning", "file": "LEARN.md", "packed": false, "lines": [], "what": "Where you are with AI, how you like to learn, and what is next.", "status": "empty"}, {"icon": "memory", "label": "Memory", "file": "MEMORY.md", "packed": false, "lines": [], "what": "Things worth every AI knowing, kept for good. Up to 20.", "empty_hint": "Nothing kept yet. Notes become memory when you say yes to a proposal.", "status": "empty"}, {"icon": "notes", "label": "Notes", "file": "memory/", "packed": false, "lines": [], "what": "A short note from any AI after a chat worth remembering.", "empty_hint": "No notes yet.", "status": "empty"}, {"icon": "skills", "label": "Skills", "file": "skills/", "packed": false, "lines": [], "what": "Things you have taught your AI to do. Every app can use them.", "empty_hint": "None of your own yet. Three came with your rucksack: setup, teach and pack-for.", "status": "empty"}, {"icon": "projects", "label": "Projects", "file": "projects/", "packed": false, "lines": [], "what": "What you are building with AI right now.", "empty_hint": "Nothing in progress.", "status": "empty"}, {"icon": "try", "label": "Try things", "file": "try/", "packed": false, "lines": [], "what": "A scratch area any AI may write to freely. Nothing there is about you.", "empty_hint": "Empty.", "status": "empty"}, {"icon": "vault", "label": "Vault", "file": "vault/", "packed": false, "lines": [], "what": "Real documents. They stay on this computer, never go to git, and are never copied anywhere else.", "empty_hint": "Empty.", "status": "empty"}], "apps": [], "files_packed": [{"label": "About you", "file": "USER.md", "ok": false}, {"label": "Boundary", "file": "USER.md", "ok": false}, {"label": "How to work with you", "file": "SOUL.md", "ok": true}, {"label": "How you learn", "file": "LEARN.md", "ok": false}, {"label": "Apps", "file": "FLEET.md", "ok": false}], "areas": [{"name": "Choosing", "question": "Do I know what AI is good for, when not to use it, and which tool?", "start": 0, "earned": 0}, {"name": "Asking", "question": "Can I give it what it needs and refine when it misses?", "start": 0, "earned": 0}, {"name": "Checking", "question": "Do I judge the result against evidence, in proportion to the risk?", "start": 0, "earned": 0}, {"name": "Staying safe", "question": "Do I protect people and data, and understand permissions and consequences?", "start": 0, "earned": 0}, {"name": "Keeping it running", "question": "Do I keep usable files, routines and instructions, delegate within limits, and recover when it fails?", "start": 0, "earned": 0}, {"name": "Growing", "question": "Do I adapt as tools change, keep my own judgement, and help someone else?", "start": 0, "earned": 0}], "level_names": ["First safe use", "Working with it", "Repeatable", "Trusting it with tools", "Running the show"], "learn_how": [], "working_now": [], "next": [], "skills": [], "skills_ours": [{"name": "pack-for", "desc": "Make a paste-ready copy of this rucksack for an AI app that cannot read it directly (ChatGPT custom instructions, Claude memory or preferences, Meta Muse, Grok, Gemini saved info)."}, {"name": "setup", "desc": "Set up a new rucksack with the person, about 20 minutes, ending with every AI app they use wired to it."}, {"name": "teach", "desc": "Run an activity from the curriculum, the monthly look-back, or the person's waiting proposals, in any app that can read the rucksack."}], "routines": [], "notes": [], "note_count": 0, "memories": 0, "lookbacks": 0, "due": false, "next_due": "", "try_files": [], "health": {"privacy": [], "budgets": [], "pending": 0}, "curriculum": "curriculum: v0.4 | last look-back: never | next look-back due: (written while setting up)", "custom_css": false}</script>
+<script>
+(() => {
+  const D = JSON.parse(document.getElementById('rucksack-data').textContent || '{}');
+  const $ = id => document.getElementById(id);
+  const esc = t => String(t ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const I = {
+    user:'<circle cx="24" cy="17" r="7.5"/><path d="M10.5 40c0-7.5 6-12.5 13.5-12.5S37.5 32.5 37.5 40"/>',
+    boundary:'<path d="M24 5.5l15 5.5v11c0 10-6.5 17-15 20.5C15.5 39 9 32 9 22V11z"/><path d="M18 23.5l4.5 4.5 8-8"/>',
+    soul:'<path d="M9 12.5h30a3.5 3.5 0 0 1 3.5 3.5v14a3.5 3.5 0 0 1-3.5 3.5H22l-8 6.5v-6.5H9A3.5 3.5 0 0 1 5.5 30V16A3.5 3.5 0 0 1 9 12.5z"/><path d="M14.5 21.5h19M14.5 26.5h12"/>',
+    fleet:'<rect x="6.5" y="9" width="21" height="16" rx="3.5"/><rect x="20.5" y="23" width="21" height="16" rx="3.5"/><path d="M10.5 30.5v4.5a3.5 3.5 0 0 0 3.5 3.5h2.5"/>',
+    learn:'<path d="M8 38.5h32"/><rect x="9.5" y="28" width="6.5" height="10.5" rx="2"/><rect x="20.75" y="20" width="6.5" height="18.5" rx="2"/><rect x="32" y="11" width="6.5" height="27.5" rx="2"/>',
+    memory:'<path d="M14 6.5h20a3 3 0 0 1 3 3v32l-13-8.5-13 8.5v-32a3 3 0 0 1 3-3z"/>',
+    notes:'<rect x="11" y="11.5" width="26" height="30" rx="3.5"/><path d="M16 6.5h21.5a3.5 3.5 0 0 1 3.5 3.5v25"/><path d="M16.5 21h15M16.5 27h15M16.5 33h9"/>',
+    skills:'<path d="M36.5 18.5A13.5 13.5 0 1 0 38 28"/><path d="M38.5 9.5v9.5H29"/><path d="M18.5 24.5l4 4 7.5-8"/>',
+    projects:'<path d="M6.5 14a3.5 3.5 0 0 1 3.5-3.5h8.5l4.5 5h15a3.5 3.5 0 0 1 3.5 3.5v17.5a3.5 3.5 0 0 1-3.5 3.5H10a3.5 3.5 0 0 1-3.5-3.5z"/><path d="M6.5 20.5h35"/>',
+    try:'<path d="M30.5 8.5l9 9L18 39l-10.5 1.5L9 30z"/><path d="M26 13l9 9"/>',
+    vault:'<rect x="9.5" y="21" width="29" height="20.5" rx="4"/><path d="M16 21v-5.5a8 8 0 0 1 16 0V21"/><path d="M24 29v5"/>',
+    routine:'<circle cx="24" cy="24" r="16.5"/><path d="M24 14v10.5l7 4"/>',
+    tick:'<circle cx="24" cy="24" r="17.5"/><path d="M16 24.5l5.5 5.5L32.5 19"/>',
+    ticksolid:'<circle cx="24" cy="24" r="19" fill="currentColor" stroke="none"/><path d="M15.5 24.5l6 6L33 18.5" stroke="#fff"/>',
+    flag:'<circle cx="24" cy="24" r="17.5"/><path d="M24 14.5v12"/><path d="M24 32.5v.5"/>',
+    copy:'<rect x="15" y="15" width="24" height="26" rx="4"/><path d="M33 15v-4a4 4 0 0 0-4-4H13a4 4 0 0 0-4 4v20a4 4 0 0 0 4 4h2"/>',
+    plus:'<circle cx="24" cy="24" r="17.5"/><path d="M24 16v16M16 24h16"/>',
+    clock:'<circle cx="24" cy="24" r="17.5"/><path d="M24 15v9.5l6.5 4"/>'
+  };
+  const icon = (k, cls = '') => `<svg class="${cls}" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${I[k] || ''}</svg>`;
+  const plural = (n, w, ws) => `${n} ${n === 1 ? w : (ws || w + 's')}`;
+  const fmtDate = d => { if (!d) return ''; const t = new Date(d + 'T00:00:00'); return isNaN(t) ? d : t.toLocaleDateString('en-AU', {day: 'numeric', month: 'short', year: 'numeric'}); };
+  const daysSince = d => { const t = new Date(d + 'T00:00:00'); return isNaN(t) ? null : Math.floor((new Date(D.today + 'T00:00:00') - t) / 864e5); };
+
+  // copy a ready-made sentence to paste into any AI that reads the rucksack
+  const toast = msg => { const t = $('toast'); t.textContent = msg; t.classList.add('show'); clearTimeout(toast.t); toast.t = setTimeout(() => t.classList.remove('show'), 1800); };
+  const copyText = async (text, btn) => {
+    let ok = false;
+    try { await navigator.clipboard.writeText(text); ok = true; } catch (e) {
+      const ta = document.createElement('textarea'); ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0'; document.body.appendChild(ta); ta.select();
+      try { ok = document.execCommand('copy'); } catch (e2) {} ta.remove();
+    }
+    if (ok) { btn.classList.add('done'); btn.querySelector('.t').textContent = 'Copied'; toast('Copied. Paste it into any AI that reads your rucksack.'); setTimeout(() => { btn.classList.remove('done'); btn.querySelector('.t').textContent = btn.dataset.label; }, 1800); }
+    else toast('Your browser blocked copying. Select the words and copy them yourself.');
+  };
+  const copyBtn = (text, label = 'Copy a message for your AI') => `<button class="copy" type="button" data-copy="${esc(text)}" data-label="${esc(label)}">${icon('copy')}<span class="t">${esc(label)}</span></button>`;
+  document.addEventListener('click', e => { const b = e.target.closest('button.copy'); if (b) copyText(b.dataset.copy, b); });
+
+  const title = D.name ? `${D.name}'s rucksack` : 'Your rucksack';
+  document.title = title;
+  $('updated').textContent = D.today ? `Updated ${fmtDate(D.today)}` : '';
+
+  // hero
+  const apps = D.apps || [];
+  const reach = apps.filter(a => a.level === 'wired' || a.level === 'connected').length;
+  $('t-hero').textContent = title;
+  if (!D.set_up) {
+    $('hero-status').innerHTML = 'Not packed yet. Open this folder in an AI app that works with folders and say hello; it takes about 20 minutes.';
+  } else {
+    const first = (D.in_short || [])[0] || '';
+    $('hero-status').innerHTML = `${esc(first)}${first ? '. ' : ''}<b>Packed, and reaching ${reach} of ${plural(apps.length, 'app')}.</b>`;
+  }
+  const lvCount = k => apps.filter(a => a.level === k).length;
+  $('hero-chips').innerHTML = [['wired', 'wired'], ['connected', 'connected'], ['a copy', 'holding a copy']].filter(([k]) => lvCount(k)).map(([k, w]) => `<span class="chip"><span class="dot"></span>${lvCount(k)} ${w}</span>`).join('')
+    + (D.health && D.health.pending ? `<span class="chip">${plural(D.health.pending, 'proposal')} waiting for your yes</span>` : '')
+    + (D.due ? '<span class="chip">Look-back due</span>' : '');
+
+  // the pack diagram
+  const parts = D.parts || [];
+  const half = Math.ceil(parts.length / 2);
+  const itemHtml = (p, i) => `<li><button class="item${p.packed ? '' : ' empty'}" type="button" data-i="${i}" aria-expanded="false" aria-controls="detail"><span class="ic">${icon(p.icon)}${p.packed ? icon('ticksolid', 'tk') : ''}</span><span><span class="nm">${esc(p.label)}</span><span class="st">${esc(p.status)} · <code>${esc(p.file)}</code></span></span></button></li>`;
+  $('side-left').innerHTML = parts.slice(0, half).map((p, i) => itemHtml(p, i)).join('');
+  $('side-right').innerHTML = parts.slice(half).map((p, i) => itemHtml(p, i + half)).join('');
+  const showDetail = i => {
+    const p = parts[i];
+    if (!p) { $('detail').innerHTML = '<p class="hint">Hover or tap any part of your pack to see what it holds.</p>'; return; }
+    const lines = (p.lines || []).length ? `<ul>${p.lines.map(l => `<li>${esc(l)}</li>`).join('')}</ul>` : '';
+    $('detail').innerHTML = `<h3>${esc(p.label)} <code>${esc(p.file)}</code></h3><p>${esc(p.what)}</p>${lines}${p.empty_hint && !p.packed ? `<p>${esc(p.empty_hint)}</p>` : ''}`;
+  };
+  const dg = $('diagram'), svg = dg.querySelector('svg.leaders'), big = dg.querySelector('.centre svg');
+  const buttons = [...dg.querySelectorAll('button.item')];
+  let pinned = null;
+  const setActive = i => {
+    const on = i !== null && i !== undefined;
+    dg.classList.toggle('has-active', on);
+    buttons.forEach(b => { const a = b.dataset.i === String(i); b.classList.toggle('active', a); b.setAttribute('aria-expanded', a); });
+    svg.querySelectorAll('[data-i]').forEach(el => el.classList.toggle('active', el.dataset.i === String(i)));
+    showDetail(on ? +i : null);
+  };
+  const draw = () => {
+    const r = dg.getBoundingClientRect(), p = big.getBoundingClientRect();
+    svg.setAttribute('viewBox', `0 0 ${r.width} ${r.height}`);
+    if (getComputedStyle(svg).display === 'none') return;
+    let out = '';
+    for (const side of ['left', 'right']) {
+      const list = buttons.filter(b => b.closest('.side').classList.contains(side));
+      list.forEach((b, k) => {
+        const br = b.querySelector('.ic').getBoundingClientRect();
+        const x1 = side === 'left' ? br.right - r.left + 8 : br.left - r.left - 8, y1 = br.top + br.height / 2 - r.top;
+        const fy = .32 + k * (.56 / Math.max(1, list.length - 1));
+        const x2 = side === 'left' ? p.left - r.left + p.width * .22 : p.right - r.left - p.width * .22, y2 = p.top - r.top + p.height * fy;
+        const mx = (x1 + x2) / 2;
+        out += `<path data-i="${b.dataset.i}" d="M${x1} ${y1} C${mx} ${y1} ${mx} ${y2} ${x2} ${y2}"/><circle data-i="${b.dataset.i}" cx="${x2}" cy="${y2}" r="3.5"/>`;
+      });
+    }
+    svg.innerHTML = out; setActive(pinned);
+  };
+  buttons.forEach(b => {
+    b.addEventListener('mouseenter', () => { if (pinned === null) setActive(b.dataset.i); });
+    b.addEventListener('mouseleave', () => { if (pinned === null) setActive(null); });
+    b.addEventListener('focus', () => { if (pinned === null) setActive(b.dataset.i); });
+    b.addEventListener('click', () => { pinned = pinned === b.dataset.i ? null : b.dataset.i; setActive(pinned); });
+  });
+  if ('ResizeObserver' in window) new ResizeObserver(draw).observe(dg);
+  addEventListener('load', draw); showDetail(null); draw();
+
+  // status: each app and how it reaches the pack
+  $('status-lead').textContent = apps.length
+    ? `Your rucksack reaches ${reach} of ${plural(apps.length, 'app')} on its own. The rest hold a copy, which goes stale until it is refreshed.`
+    : 'No apps recorded yet. Setting up connects each AI app you use, one at a time.';
+  const lvName = {wired: 'Wired', connected: 'Connected', 'a copy': 'A copy'};
+  $('routes').innerHTML = apps.map(a => {
+    const cls = a.level === 'a copy' ? 'cp' : (a.level || 'none');
+    const age = a.checked ? daysSince(a.checked) : null;
+    const stale = a.level === 'a copy' && age !== null && age > 30;
+    return `<div class="app"><div class="link"><svg class="mini" viewBox="0 0 420.42 603.00" aria-hidden="true"><use href="#pack-small" width="420.42" height="603.00"/></svg><span class="line ${cls}"></span><span class="end" aria-hidden="true">${esc((a.app || '?').trim().charAt(0).toUpperCase())}</span></div>
+      <div class="nm">${esc(a.app)}</div><div class="meta">${esc([a.where, a.use].filter(Boolean).join(' · '))}</div>
+      <span class="lv ${cls}${stale ? ' stale' : ''}">${a.level ? lvName[a.level] : 'Not recorded'}${a.checked ? ` · ${stale ? 'made' : 'checked'} ${fmtDate(a.checked)}` : ''}${stale ? ' · refresh it' : ''}</span></div>`;
+  }).join('') || '<div class="app"><div class="nm">No apps yet</div><div class="meta">Say "wire my apps" to any AI that has your rucksack open.</div></div>';
+  $('packed').innerHTML = (D.files_packed || []).map(f => `<span class="chip${f.ok ? '' : ' no'}">${f.ok ? icon('ticksolid') : ''}${esc(f.label)} <code>${esc(f.file)}</code></span>`).join('');
+
+  // learning: a ridge of six areas
+  const areas = D.areas || [];
+  $('ridge').innerHTML = areas.map((a, i) => `<button class="col" type="button" data-a="${i}" aria-label="${esc(a.name)}: ${a.earned ? 'level ' + a.earned : a.start ? 'starting at ' + a.start : 'not yet'}">${[1,2,3,4,5].map(n => `<span class="step ${n <= a.earned ? 'earned' : (n <= a.start ? 'start' : '')}"></span>`).join('')}</button>`).join('');
+  $('names').innerHTML = areas.map((a, i) => `<button type="button" data-a="${i}">${esc(a.name)}</button>`).join('');
+  const levelNames = D.level_names || [];
+  const showArea = i => {
+    document.querySelectorAll('[data-a]').forEach(el => el.classList.toggle('on', el.dataset.a === String(i)));
+    const a = areas[i]; if (!a) return;
+    const at = a.earned || 0, nx = Math.min(5, at + 1);
+    $('area-detail').innerHTML = `<h3>${esc(a.name)} · ${at ? `level ${at}, ${esc(levelNames[at - 1] || '')}` : a.start ? `starting at ${a.start}` : 'not yet'}</h3><p>${esc(a.question)}</p>${at < 5 ? `<p>Next: level ${nx}, ${esc(levelNames[nx - 1] || '')}.</p>` : ''}${copyBtn(`From my rucksack: suggest one thing I could try on my own work to get better at ${a.name.toLowerCase()}.`, 'Ask your AI for something to try')}`;
+  };
+  document.querySelectorAll('#ridge [data-a], #names [data-a]').forEach(el => el.addEventListener('click', () => showArea(+el.dataset.a)));
+  const weakest = areas.reduce((m, a, i) => (a.earned || a.start || 0) < (areas[m].earned || areas[m].start || 0) ? i : m, 0);
+  if (areas.length) showArea(areas.findIndex(a => a.earned || a.start) >= 0 ? areas.findIndex(a => a.earned) >= 0 ? areas.findIndex(a => a.earned) : weakest : 0);
+  const nowTxt = (D.working_now || [])[0];
+  $('now').textContent = nowTxt || 'Nothing yet. Ask any AI that reads your rucksack what to try first.';
+  $('now-copy').innerHTML = nowTxt ? copyBtn(`From my rucksack: let's work on what I'm working on now (${nowTxt}).`, "Copy: let's work on this") : copyBtn('From my rucksack: what should I try next?', 'Copy: what should I try next?');
+  $('next').innerHTML = (D.next || []).map(n => `<li><span>${esc(n)}</span>${copyBtn(`From my rucksack: let's try this next: ${n}.`, 'Copy')}</li>`).join('') || '<li><span style="color:var(--ink2)">Nothing lined up. Your AI offers two at a time when you ask.</span></li>';
+  $('learn-how').innerHTML = (D.learn_how || []).map(l => `<li>${esc(l)}</li>`).join('') || '<li style="color:var(--ink2);list-style:none">Not said yet. Tell any AI that reads your rucksack how you like to learn, and it keeps it here.</li>';
+
+  // skills and tools: gear clipped to a strap
+  const yours = D.skills || [];
+  $('gear').innerHTML = yours.map(s => `<div class="tool"><div class="nm">${icon('skills')}${esc(s.name)}</div><p>${esc(s.desc)}</p></div>`).join('')
+    + `<div class="tool add"><div class="nm">${icon('plus')}Make a skill</div><p>Something you ask for often can become a skill every app uses.</p>${copyBtn('From my rucksack: help me turn something I ask for often into a skill.', 'Copy a message')}</div>`
+    + (D.skills_ours || []).map(s => `<div class="tool ours"><div class="nm">${icon('skills')}${esc(s.name)}</div><p>${esc(s.desc)}</p></div>`).join('');
+  const routines = D.routines || [];
+  $('routines').innerHTML = routines.length ? `${icon('routine', '').replace('<svg ', '<svg style="width:18px;height:18px;vertical-align:-3px;margin-right:6px" ')}<b>${plural(routines.length, 'routine')} running:</b> ${routines.map(esc).join(', ')}` : 'No routines running yet. Something runs on its own only after three good runs with you watching.';
+
+  // notes: the trail
+  const notes = D.notes || [];
+  $('trail').innerHTML = notes.map(n => `<li class="${n.flag ? 'flag' : ''}"><span class="when">${fmtDate(n.date)}</span><span class="app-tag">${esc(n.app)}</span><p class="did">${esc(n.did)}</p></li>`).join('') || '<li><p class="did" style="color:var(--ink2)">No notes yet. An AI leaves one after a chat worth remembering.</p></li>';
+  $('kept').textContent = D.memories ? `${plural(D.memories, 'thing')} kept in MEMORY.md, from ${plural(D.note_count || 0, 'note')} in all.` : 'Nothing kept for good yet. When a note says something worth remembering, your AI proposes it and you say yes.';
+  $('lookback').textContent = D.lookbacks ? `${plural(D.lookbacks, 'look-back')} so far. ${D.due ? 'The next one is due now.' : ''}` : (D.due ? 'Your first look-back is due.' : 'None yet. Once a month, if you want, your AI looks back at how you have been using AI and catches up what each app remembers.');
+
+  // try things
+  const tried = D.try_files || [];
+  $('sandbox').innerHTML = tried.length ? `<b>${plural(tried.length, 'file')} in <code>try/</code></b><ul>${tried.slice(0, 8).map(f => `<li><code>${esc(f)}</code></li>`).join('')}</ul>` : '<b>Empty for now.</b><p style="margin:6px 0 0">Ask your AI to try something here: a draft, a test, a comparison. It never counts as being about you.</p>';
+  $('try-copy').innerHTML = copyBtn('From my rucksack: use my try/ folder as a scratch area and try this with me: ', 'Copy a starter');
+
+  // health check
+  const H = D.health || {};
+  const row = (ok, title, sub, list) => `<li class="${ok ? '' : 'warn'}">${icon(ok ? 'tick' : 'flag')}<div><b>${esc(title)}</b><span>${esc(sub)}</span>${(list || []).length ? `<ul>${list.map(l => `<li>${esc(l)}</li>`).join('')}</ul>` : ''}</div></li>`;
+  const staleCopies = apps.filter(a => a.level === 'a copy' && a.checked && daysSince(a.checked) > 30);
+  $('checks').innerHTML = [
+    row(!(H.privacy || []).length, 'Privacy check', (H.privacy || []).length ? `${plural(H.privacy.length, 'thing')} to look at. Kinds and places only, never the values.` : 'Nothing that looks like a secret or a personal detail.', H.privacy),
+    row(!(H.budgets || []).length, 'Sizes', (H.budgets || []).length ? 'A file is over its budget. Ask your AI to tidy it.' : 'Every file is within its budget, so every app can carry it.', H.budgets),
+    row(!H.pending, 'Proposals', H.pending ? `${plural(H.pending, 'change')} waiting for your yes. Say "apply my proposals".` : 'Nothing waiting for your yes.'),
+    row(!staleCopies.length, 'Copies', staleCopies.length ? `${plural(staleCopies.length, 'copy', 'copies')} older than a month: ${staleCopies.map(a => a.app).join(', ')}.` : 'No copy is more than a month old.'),
+    row(!D.due, 'Look-back', D.due ? 'Due now. Ask any AI that reads your rucksack for your look-back.' : (D.next_due ? `Next one due ${fmtDate(D.next_due)}.` : 'Not scheduled yet.')),
+    row(true, 'Tidy', `Last run ${fmtDate(D.today)}. It rebuilds this page, the start page and the check.`)
+  ].join('');
+  $('foot-curriculum').textContent = (m => m ? `Curriculum ${m[1]}` : '')(/curriculum:\s*(v[\d.]+)/.exec(D.curriculum || ''));
+  $('foot-css').textContent = D.custom_css ? 'Your colours come from dashboard.css.' : 'Made by the tidy from your rucksack files. To change its colours, ask your AI to make you a dashboard.css.';
+
+  // the bar: highlight the section in view, and a shadow once the page scrolls
+  const bar = $('bar'), tabs = [...document.querySelectorAll('nav.tabs a')];
+  addEventListener('scroll', () => bar.classList.toggle('scrolled', scrollY > 8), {passive: true});
+  if ('IntersectionObserver' in window) {
+    const seen = new Map();
+    const io = new IntersectionObserver(es => { es.forEach(e => seen.set(e.target.id, e.isIntersecting)); const cur = tabs.find(t => seen.get(t.hash.slice(1))); tabs.forEach(t => t.classList.toggle('on', t === cur)); }, {rootMargin: '-40% 0px -55% 0px'});
+    tabs.forEach(t => { const s = document.querySelector(t.hash); if (s) io.observe(s); });
+  }
+
+  // the terrain: a dot grid over one field that rises from the pack; lit dots near the pack drift and twinkle
+  const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const terrain = (cv, opts) => {
+    const ctx = cv.getContext('2d'), host = cv.parentElement; let W, H, dpr, C, R0, raf = null, on = false;
+    const size = () => {
+      dpr = Math.min(2, devicePixelRatio || 1); const r = host.getBoundingClientRect(); W = r.width; H = r.height;
+      cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr);
+      const anchor = opts.anchor && opts.anchor.getBoundingClientRect();
+      C = anchor && anchor.width ? {x: anchor.left - r.left + anchor.width / 2, y: anchor.top - r.top + anchor.height * .58} : {x: W * .75, y: H * .55};
+      R0 = anchor && anchor.width ? Math.max(anchor.width, anchor.height) * .5 : H * .4;
+    };
+    const w = (th, s, t) => .55 * Math.sin(2 * th + .7 + .35 * s + t * .35) + .30 * Math.sin(3 * th + 2.1 - .25 * s - t * .25) + .15 * Math.sin(5 * th + .4 + .5 * s + t * .45);
+    const hills = (x, y, t) => .5 * Math.sin(x / 61 + .8 + t * .6) * Math.cos(y / 47 - .3 - t * .4) + .3 * Math.sin((x + y) / 83 + 2.1 + t * .5) + .2 * Math.cos((x - 1.7 * y) / 37 - t * .3);
+    const frame = ms => {
+      const t = (ms || 0) / 1000 * opts.speed, narrow = W < 900;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, W, H);
+      const step = narrow ? 18 : 22, far = R0 * 4;
+      for (let y = step / 2; y < H; y += step) for (let x = step / 2; x < W; x += step) {
+        const dx = (x - C.x) / 1.45, dy = y - C.y, r = Math.hypot(dx, dy), th = Math.atan2(dy, dx);
+        const f = r * (1 + .16 * w(th, r / R0, t * .2));
+        const h = .6 * (1 - f / far) + .4 * (hills(x, y, t * .2) * .5 + .5);
+        const fade = opts.fade(x, y, W, H, narrow);
+        if (fade <= 0 || h < .18) continue;
+        const lit = h > .62;
+        const tw = lit ? .55 + .45 * Math.sin(t * 2.2 + x * .37 + y * .53) : 1;
+        ctx.fillStyle = lit ? `rgba(234,223,219,${(.55 * tw * fade).toFixed(3)})` : `rgba(160,128,119,${(Math.min(.55, h * .7) * fade).toFixed(3)})`;
+        ctx.beginPath(); ctx.arc(x, y, lit ? 1.9 : 1.3 + h * .6, 0, 6.283); ctx.fill();
+      }
+      if (on && !still) raf = requestAnimationFrame(frame);
+    };
+    const start = () => { size(); if (still) frame(0); else if (!raf) { on = true; raf = requestAnimationFrame(frame); } };
+    if ('IntersectionObserver' in window) new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) start(); else { on = false; cancelAnimationFrame(raf); raf = null; } })).observe(host);
+    else start();
+    addEventListener('resize', () => { size(); if (still) frame(0); });
+    addEventListener('load', () => { size(); if (still) frame(0); });
+  };
+  terrain($('terrain'), {anchor: $('hero-pack'), speed: .5, fade: (x, y, W, H, narrow) => narrow ? Math.min(1, Math.max(0, (H * .5 - y) / (H * .2))) : Math.min(1, Math.max(0, (x - W * .38) / (W * .2)))});
+
+  // the band: a slow strap-webbing weave on the side without words
+  const wv = $('weave');
+  if (wv) {
+    const ctx = wv.getContext('2d');
+    const paint = () => { const r = wv.getBoundingClientRect(), dpr = Math.min(2, devicePixelRatio || 1); wv.width = r.width * dpr; wv.height = r.height * dpr; ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, r.width, r.height);
+      ctx.strokeStyle = 'rgba(234,223,219,.35)'; ctx.lineWidth = 1;
+      for (let y = 6; y < r.height; y += 9) { ctx.beginPath(); for (let x = 0; x <= r.width; x += 12) ctx.lineTo(x, y + ((x / 12 + y / 9) % 2 ? 1.6 : -1.6)); ctx.globalAlpha = Math.min(1, Math.max(0, (r.width - 0) / r.width)); ctx.stroke(); }
+      const g = ctx.createLinearGradient(0, 0, r.width * .7, 0); g.addColorStop(0, 'rgba(124,95,87,1)'); g.addColorStop(1, 'rgba(124,95,87,0)'); ctx.globalAlpha = 1; ctx.fillStyle = g; ctx.fillRect(0, 0, r.width, r.height); };
+    paint(); addEventListener('resize', paint);
+  }
+})();
+</script>
+</body></html>
