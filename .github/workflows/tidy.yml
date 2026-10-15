@@ -37,7 +37,14 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
+      - name: Check the rucksack is still private
+        id: vis
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: echo "visibility=$(gh api repos/${{ github.repository }} --jq .visibility)" >> "$GITHUB_OUTPUT"
       - name: Run the tidy
+        env:
+          RUCKSACK_VISIBILITY: ${{ steps.vis.outputs.visibility }}
         run: python3 -I -B scripts/tidy.py .
       - name: Secrets scan (gitleaks, free on personal repos)
         uses: gitleaks/gitleaks-action@v2
@@ -50,3 +57,8 @@ jobs:
           git diff --cached --quiet || git commit -m "tidy: $(date -u +%Y-%m-%d)"
           git pull --rebase --autostash || true
           git push
+      - name: Fail loudly if the rucksack is public, so GitHub emails the owner
+        if: steps.vis.outputs.visibility == 'public'
+        run: |
+          echo "This rucksack is PUBLIC. Anyone can read it. Make it private: Settings, Danger Zone, Change visibility."
+          exit 1

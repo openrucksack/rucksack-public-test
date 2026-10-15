@@ -8,8 +8,8 @@ You are my AI. There is no other character here; the skills are instructions you
 - [ ] Rucksack created
 - [ ] Saved in your GitHub account
 - [ ] AI tools connected to your rucksack
-- [ ] Learn about your rucksack
 - [ ] Customise your rucksack
+- [ ] Learn about your rucksack
 - [ ] Set up your learning profile
 
 ## Me in six lines

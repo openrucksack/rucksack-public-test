@@ -18,7 +18,9 @@ introduce yourself as anything other than the app you are.
    `FLEET.md`, `HEARTBEAT.md` and `LEARN.md` are the curated files; `memory/` holds the
    raw notes.
 3. If `USER.md` has no answers in it, this rucksack is new: follow `SETUP.md`.
-4. If `ONBOARDING.md` has unticked items (START.md lists them under "Still setting up"),
+4. If they ask what Rucksack is or how it works, explain it from
+   `.curriculum/cards/C00-what-rucksack-is.md`, in your words but not your own label for it.
+5. If `ONBOARDING.md` has unticked items (START.md lists them under "Still setting up"),
    mention the next one once in the chat, in one line, and offer to do it. Don't nag, and
    don't interrupt their task to do it.
 

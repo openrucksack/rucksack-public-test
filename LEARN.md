@@ -27,6 +27,11 @@ bigger activities.
 | Keeping it running | | |
 | Growing | | |
 
+## Can-dos
+<!-- Small things I can now do, each with what proves it, newest first. A level in an area is
+     earned when its can-dos are all here. One line each, for example:
+- 2026-10-15 · Gave an AI app limited access to my files, and chose how it asks before saving · Keeping it running · ChatGPT connected to my rucksack only · card C02 [observed 2026-10-15] -->
+
 ## Where I'm at
 
 | Area | What it means | Level earned | Evidence (date, link) |
