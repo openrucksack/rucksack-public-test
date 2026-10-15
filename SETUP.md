@@ -52,7 +52,8 @@ save as you go.
 - **If the chat restarts** (connecting a tool sometimes needs a new chat, or they move to a
   computer), give them this message to copy first, filled in, so the next chat knows where to
   pick up: "Carry on setting up my rucksack: the GitHub repo <username>/rucksack. Done so far:
-  <the steps done>. Cards taken: <the card numbers, or none>. Instructions: https://raw.githubusercontent.com/openrucksack/rucksack-public-test/main/SETUP.md".
+  <the steps done>. Mode: <learn as we go, or quick setup>. Cards taken: <the card numbers, or
+  none>. Instructions: https://raw.githubusercontent.com/openrucksack/rucksack-public-test/main/SETUP.md".
   In a restarted chat, if you can't see their repository yet, ask whether it exists before
   ever sending the template link again. Work out
   where they are from the repository itself, not only the ticks: if you can see the repository,
@@ -63,7 +64,9 @@ save as you go.
 ## Learning as you set up
 
 Each setup step is something worth understanding, so each has a short card in their rucksack's
-curriculum: an idea in about a hundred words, a diagram, and one question. At the step named
+curriculum: an idea in about a hundred words, a diagram, and one question. If they chose **quick
+setup**, don't offer the cards: give each step's one-line "why", keep moving, and say at the end
+that the tour covers the ideas properly. If they chose **learn as we go**, at the step named
 below, offer it in one line ("Want the one-minute version of what GitHub is?"). If they say yes, the
 card replaces that step's own "why": read it, explain it in your own words at their pace, give
 them the card's link so they can see its picture (GitHub shows it on any device; only draw it
@@ -113,7 +116,12 @@ A few short lines:
   it will know after three quick questions.
 - **The setup list,** and that the first three items take about 10 minutes (a bit more if GitHub
   is new to them), and that you'll save to their rucksack as you go.
-- **One question:** "Do you have a GitHub account, and can you sign in to it on this phone?"
+- **One choice:** "Do you want to **learn as we go** (about 25 minutes: four one-minute
+  explainers, one at each step, so you understand what you're setting up and why), or **quick
+  setup** (about 10 to 15 minutes; the explainers wait for the tour)?"
+
+Then, in the next message, one question: "Do you have a GitHub account, and can you sign in to it
+on this phone?"
 
 ## 2. GitHub first
 
