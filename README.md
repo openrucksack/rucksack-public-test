@@ -19,19 +19,14 @@ If the GitHub account or the computer was given to you by an employer, whoever
 administers it may be able to read the rucksack, and keeps it if you leave. Put your
 rucksack on an account you own.
 
-## Setting up (about 20 minutes, on a computer)
+## Setting up (about 10 minutes, on your phone or a computer)
 
-1. **Choose where it lives.**
-   - **On GitHub** (best): use this template to make a private repository of your own.
-     Your phone apps can then read it and write notes back, and a tidy runs every night.
-   - **A folder**: put this folder in your Google Drive, OneDrive or Dropbox so it is backed
-     up. Phone apps get a copy instead.
-2. **Open it in an AI app that works with folders**:
-   - the **ChatGPT desktop app** (Mac, Windows or Linux; a free ChatGPT account works,
-     with lower limits): open this folder and choose **Codex**, which reads the house rules;
-   - or **Claude**: Claude Code, or the Claude desktop app with Cowork on a Pro or Max plan.
-3. **Say hello.** Your AI asks a few questions, fills in your rucksack with you, shows it
-   working, and then connects it to every AI app you use, one at a time.
+Paste this into ChatGPT or Claude, and your AI walks you through it:
+
+> I'd like to set up Rucksack. Read https://raw.githubusercontent.com/openrucksack/rucksack-public-test/main/SETUP.md and help me through it.
+
+You'll need a free GitHub account (it can help you make one). Your rucksack is made in your
+account, connected to the AI tools you use, and your setup list is kept in `ONBOARDING.md`.
 
 ## Using it
 

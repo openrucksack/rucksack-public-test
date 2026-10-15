@@ -1,12 +1,30 @@
 name: tidy
-# The nightly tidy. Rebuilds START.md, ACTIVITY.md and SKILLS.md, archives old notes,
+# The tidy, nightly and after each save. Rebuilds START.md, ACTIVITY.md and SKILLS.md, archives old notes,
 # applies approved proposals, runs the privacy check into CHECK.md. No model, no key,
 # no network beyond GitHub. Failures land in CHECK.md and the owner's email, never a
 # red tab the person has to understand.
 on:
   schedule:
     - cron: "0 17 * * *"   # 3am Brisbane (AEST is UTC+10)
+  # Also straight after any save to the person's own files, so the start page and dashboard are
+  # current within a minute. The tidy's own commit uses GITHUB_TOKEN, which never triggers a run.
+  push:
+    branches: [main]
+    paths:
+      - "USER.md"
+      - "SOUL.md"
+      - "LEARN.md"
+      - "FLEET.md"
+      - "MEMORY.md"
+      - "HEARTBEAT.md"
+      - "ONBOARDING.md"
+      - "memory/**"
+      - "skills/**"
+      - "projects/**"
   workflow_dispatch:
+concurrency:
+  group: tidy
+  cancel-in-progress: false
 permissions:
   contents: write
 jobs:
@@ -30,4 +48,5 @@ jobs:
           git config user.email "tidy@users.noreply.github.com"
           git add -A
           git diff --cached --quiet || git commit -m "tidy: $(date -u +%Y-%m-%d)"
+          git pull --rebase --autostash || true
           git push

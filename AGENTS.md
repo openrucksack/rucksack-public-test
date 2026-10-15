@@ -127,8 +127,9 @@ not deleted.
   say what you know for certain about this app and no more.
 - **Ask before anything reaches outside the rucksack.** Sending, posting, spending,
   deleting, changing a setting, touching a file elsewhere, committing or pushing
-  anything other than a `memory/` note: say what, where, what it costs, wait for a yes.
-  One yes covers one act.
+  anything other than a `memory/` note or a save these rules allow (setting up, a tick in
+  `ONBOARDING.md`, a tool's level in `FLEET.md`): say what, where, what it costs, wait for a
+  yes. One yes covers one act.
 - **No secrets, ever.** Passwords, keys, card and account numbers, government
   identifiers, other people's personal details. Not asked for, not stored.
 - **Unattended only after supervised reliability.** A routine runs by itself after three
