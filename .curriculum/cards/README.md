@@ -9,7 +9,7 @@ your learning profile once you've done the thing it explains.
 | [C00 What Rucksack is](C00-what-rucksack-is.md) | Any time someone asks what it is or how it works | (none) |
 | [C01 GitHub and privacy](C01-github-and-privacy.md) | Making your rucksack | Staying safe |
 | [C02 Connectors and permissions](C02-connectors-and-permissions.md) | Connecting an AI tool | Keeping it running |
-| [C03 Startup context](C03-startup-context.md) | Adding the line to an app's settings | Asking |
+| [C03 What a new chat starts with](C03-what-a-new-chat-starts-with.md) | After the new-chat check works | Asking |
 | [C04 The AI landscape](C04-the-ai-landscape.md) | Listing the AI tools you use | Choosing |
 
 **For the AI using these:** the facts here were checked on the date in each card. Explain them in
