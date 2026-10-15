@@ -86,7 +86,7 @@ The cards (the link opens it for them; you read the same file through the raw li
 | 2 or 3, before they sign up or create it | C01 GitHub and privacy | https://github.com/openrucksack/rucksack-public-test/blob/main/.curriculum/cards/C01-github-and-privacy.md | https://raw.githubusercontent.com/openrucksack/rucksack-public-test/main/.curriculum/cards/C01-github-and-privacy.md |
 | 4, before the GitHub permission screen | C02 Connectors and permissions | https://github.com/openrucksack/rucksack-public-test/blob/main/.curriculum/cards/C02-connectors-and-permissions.md | https://raw.githubusercontent.com/openrucksack/rucksack-public-test/main/.curriculum/cards/C02-connectors-and-permissions.md |
 | 5, after the answers are saved | C04 The AI landscape | https://github.com/openrucksack/rucksack-public-test/blob/main/.curriculum/cards/C04-the-ai-landscape.md | https://raw.githubusercontent.com/openrucksack/rucksack-public-test/main/.curriculum/cards/C04-the-ai-landscape.md |
-| 6, after the reveal | C03 Startup context | https://github.com/openrucksack/rucksack-public-test/blob/main/.curriculum/cards/C03-startup-context.md | https://raw.githubusercontent.com/openrucksack/rucksack-public-test/main/.curriculum/cards/C03-startup-context.md |
+| 6, after the reveal | C03 What a new chat starts with | https://github.com/openrucksack/rucksack-public-test/blob/main/.curriculum/cards/C03-what-a-new-chat-starts-with.md | https://raw.githubusercontent.com/openrucksack/rucksack-public-test/main/.curriculum/cards/C03-what-a-new-chat-starts-with.md |
 
 If they ask what Rucksack is, at any point, use card C00:
 https://raw.githubusercontent.com/openrucksack/rucksack-public-test/main/.curriculum/cards/C00-what-rucksack-is.md
@@ -135,10 +135,10 @@ chat only), so nothing else happens before this.
 - **No account:** GitHub is a free place to keep files that AI tools can read and update, a bit
   like Google Drive. Theirs will be private. In the phone's browser (not inside this app), go to
   github.com/signup. "Continue with Google" or Apple is quickest if it's offered. GitHub emails a
-  code, and asks for two-step sign-in: a second check, besides the password, that it's really
-  them. GitHub requires it for accounts that keep files there. A passkey (Face ID or the
-  phone's fingerprint) is quickest on a phone; an authenticator app or a text message also
-  work. They type any codes themselves.
+  code, and may ask for two-step sign-in: a second check, besides the password, that it's really
+  them. GitHub requires it for some accounts, and it's worth turning on either way, keeping the
+  recovery codes somewhere safe. A passkey (Face ID or the phone's fingerprint) is quickest on a
+  phone; an authenticator app or a text message also work. They type any codes themselves.
 - **Can't remember the password:** "Forgot password?" on github.com/login sends a reset link to
   their email.
 - **Can't do it now:** stop here, kindly. Tell them nothing is lost: they can paste the same
@@ -174,7 +174,8 @@ Why: a connector is the permission that lets this app read and update their ruck
 two parts, and they can choose which repositories it may see.
 
 **ChatGPT (tested 15 October 2026, in an ordinary chat on a phone):**
-1. In ChatGPT, Settings, then Apps, then GitHub: connect it. This signs ChatGPT in to GitHub.
+1. In ChatGPT, Settings, then Plugins (Apps on older versions), then GitHub: connect it. This
+   signs ChatGPT in to GitHub.
 2. Before this part, offer card C02: it explains the permission screen they're about to see.
    On GitHub, allow it to see the rucksack. This is the part that's easy to miss: without it,
    ChatGPT finds nothing ("404"). Give them this link, to open in the browser where they're
@@ -188,7 +189,7 @@ two parts, and they can choose which repositories it may see.
 3. Start a new chat: ChatGPT only picks up a new connection in a fresh chat. Give them the
    carry-on message first (see "If the chat restarts").
 
-**Claude:** Settings, then Connectors, then GitHub. Claude's phone app may not offer it; then
+**Claude:** Customize, then Connectors, then GitHub. Claude's phone app may not offer it; then
 claude.ai in the phone's browser, or a computer. Claude's GitHub access may only read; the first
 save below shows whether it can write, and if it can't, use the read-only path.
 
@@ -263,9 +264,9 @@ its title should now have their name. If it doesn't after a couple of minutes, s
 
 ## 6. AI tools connected
 
-**This tool first.** Give them the line for this tool's settings (ChatGPT: custom instructions,
-under Personalisation; Claude: profile preferences), so every new chat reads their rucksack by
-itself:
+**This tool first.** Give them the line for this tool's settings (ChatGPT: Custom instructions,
+under Settings, then Personalization; Claude: Instructions for Claude, under Settings, then
+General), so every new chat opens their rucksack by itself:
 
 > I keep my personal AI context in Rucksack: the private GitHub repo <username>/rucksack,
 > through the GitHub connector. At the start of every chat, read START.md there and follow its
@@ -274,8 +275,9 @@ itself:
 > the end of a chat worth remembering, add one note to memory/ as AGENTS.md describes. If you
 > can't reach the repo, tell me.
 
-Why: custom instructions are this app's startup context, what it reads before every chat.
-This line is what makes every new chat open their rucksack first. After the reveal below, offer
+Why: an AI remembers nothing between chats; each one starts fresh with what the app puts in
+front of it, and these settings are the part they control. This line is what makes every new
+chat open their rucksack before it answers. After the reveal below, offer
 card C03: it explains what just happened, and it's the most important idea in setup.
 
 Then the reveal. Ask them to start a new chat and send two things: "What's the first house rule
@@ -287,7 +289,8 @@ what it said. That second answer is the moment it starts working for them: say s
 **Then their other tools.** For each tool and account from question 2, offer to connect it now:
 - **Another ChatGPT or Claude account:** the same two things there: GitHub connected to
   `rucksack`, and the same line in its settings. One account's settings cover its phone app,
-  website and desktop app.
+  website and desktop app. Claude's built-in GitHub connection can read but not save: record it
+  as connected (reads it), not wired.
 - **Codex or Claude Code on a computer:** needs them at that computer, where the tool clones
   the repository and adds one line to its own settings file so every project reads it: Claude
   Code's `~/.claude/CLAUDE.md`, or Codex's `~/.codex/AGENTS.md`:

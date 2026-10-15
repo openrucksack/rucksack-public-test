@@ -8,29 +8,43 @@ checked: 2026-10-15
 
 # GitHub and privacy
 
-![Your rucksack is a private repository in your GitHub account: only you and the AI tools you allow can see it, and every change is kept](C01-github-and-privacy.svg)
+![Your rucksack is a private repository in your GitHub account: you, anyone you invite and the AI tools you allow can see it; GitHub staff only in rare cases; every saved change is kept](C01-github-and-privacy.svg)
 
 **The idea.** GitHub is a website for keeping files, owned by Microsoft and used by millions of
 people and companies. Your files sit in a **repository**, GitHub's word for a folder. A
-**private** repository can be seen only by you and by the apps you allow; nobody can find it by
-searching. When an AI tool you allow reads it, what it reads goes to that tool's company, just
-like anything you type there. GitHub keeps **every change**, with the date, so you can always see
-what changed, and undo it.
+**private** repository is seen only by you, anyone you invite, and the apps you allow; nobody can
+find it by searching, and GitHub's staff look only in narrow cases, like a support request you
+make, security, or the law. When an AI app you allow reads it, what it reads goes to that app's
+company, like anything you type there. Every saved change is kept, so you can go back to any
+earlier version.
 
 **In your setup.** Your rucksack will be a private repository called `rucksack` in your own
 account.
 
-**Check it landed.** "Who will be able to see your rucksack?" (Only them, and the AI tools they
-allow.)
+**Check it landed.** "Who will be able to see your rucksack?" (Them, anyone they invite, and the
+AI apps they allow.)
 
 **What proves it.** Their repository exists and shows "Private" next to its name.
 
 **For the AI.** Address the worry directly: putting personal things into something called
-"GitHub" feels odd if they don't know it. Private means private; GitHub requires two-step
-sign-in, which protects the account; their rucksack's nightly tidy also checks it is still
-private and warns them if it ever isn't. If they ask whether Microsoft or GitHub can read it: it
-is stored by GitHub under GitHub's privacy terms, much as Google stores a Drive. Something saved
-by mistake stays in the history; if that happens, help them remove it properly. Offer more if they want it: how history works, what
-"public" would mean, how to download everything. Diagram, to draw if you can: their GitHub
-account containing a `rucksack` box marked Private; beside it "who can see it": you yes, AI
-tools you allow yes, everyone else no; under it a timeline of kept changes.
+"GitHub" feels odd if they don't know it. Points to have ready, all from GitHub's own documents
+(checked 15 October 2026):
+
+- GitHub says it does not train AI on private repository content at rest. If they ever use
+  GitHub's own Copilot on it, they can switch off "Allow GitHub to use my data for AI model
+  training" in their settings.
+
+- Two-step sign-in protects the account; GitHub requires it for some accounts, and everyone should
+  turn it on and keep the recovery codes.
+
+- Something saved by mistake stays in the history; removing it properly takes more than deleting
+  the file, so help them do it right. A deleted repository can be restored for 90 days; a deleted
+  account can't.
+
+- "Download ZIP" takes today's files; GitHub's account export takes everything.
+
+- Their rucksack's tidy checks every night that it is still private, and warns them if not.
+
+Diagram, to draw only if asked: their GitHub account holding a `rucksack` box marked Private;
+beside it who can see it (you, people you invite, AI apps you allow; everyone else no; GitHub
+staff only in rare cases); under it a timeline of saved changes.
